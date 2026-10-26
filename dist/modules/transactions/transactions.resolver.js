@@ -14,6 +14,7 @@ import { Args, Mutation, Resolver, } from '@nestjs/graphql';
 import { TransactionsService } from './transactions.service.js';
 import { TransactionModel } from './models/transaction.model.js';
 import { DepositInput } from './dto/deposit.input.js';
+import { WithdrawInput } from './dto/withdraw.input.js';
 let TransactionsResolver = class TransactionsResolver {
     transactionsService;
     constructor(transactionsService) {
@@ -21,6 +22,9 @@ let TransactionsResolver = class TransactionsResolver {
     }
     async deposit(input) {
         return this.transactionsService.deposit(input);
+    }
+    async withdraw(input) {
+        return this.transactionsService.withdraw(input);
     }
 };
 __decorate([
@@ -30,6 +34,13 @@ __decorate([
     __metadata("design:paramtypes", [DepositInput]),
     __metadata("design:returntype", Promise)
 ], TransactionsResolver.prototype, "deposit", null);
+__decorate([
+    Mutation(() => TransactionModel),
+    __param(0, Args('input')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [WithdrawInput]),
+    __metadata("design:returntype", Promise)
+], TransactionsResolver.prototype, "withdraw", null);
 TransactionsResolver = __decorate([
     Resolver(() => TransactionModel),
     __metadata("design:paramtypes", [TransactionsService])
