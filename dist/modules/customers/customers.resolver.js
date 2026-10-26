@@ -7,7 +7,13 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-import { Resolver, Query } from '@nestjs/graphql';
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
+import { Resolver, Query, Args, ID } from '@nestjs/graphql';
+import { Mutation } from '@nestjs/graphql';
+import { CreateCustomerInput } from './dto/create-customer.input.js';
+import { ParseUUIDPipe } from '@nestjs/common';
 import { CustomersService } from './customers.service.js';
 import { CustomerModel } from './models/customer.model.js';
 let CustomersResolver = class CustomersResolver {
@@ -18,6 +24,12 @@ let CustomersResolver = class CustomersResolver {
     async findAll() {
         return this.customersService.findAll();
     }
+    async findOne(id) {
+        return this.customersService.findOne(id);
+    }
+    async createCustomer(input) {
+        return this.customersService.create(input);
+    }
 };
 __decorate([
     Query(() => [CustomerModel], { name: 'customers' }),
@@ -25,6 +37,20 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], CustomersResolver.prototype, "findAll", null);
+__decorate([
+    Query(() => CustomerModel, { name: 'customer' }),
+    __param(0, Args('id', { type: () => ID }, ParseUUIDPipe)),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], CustomersResolver.prototype, "findOne", null);
+__decorate([
+    Mutation(() => CustomerModel),
+    __param(0, Args('input')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [CreateCustomerInput]),
+    __metadata("design:returntype", Promise)
+], CustomersResolver.prototype, "createCustomer", null);
 CustomersResolver = __decorate([
     Resolver(() => CustomerModel),
     __metadata("design:paramtypes", [CustomersService])

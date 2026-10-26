@@ -10,9 +10,11 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException, } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { ConflictException } from '@nestjs/common';
+import { QueryFailedError } from 'typeorm';
 import { Customer } from './entities/customer.entity.js';
 let CustomersService = class CustomersService {
     customersRepository;
@@ -25,6 +27,31 @@ let CustomersService = class CustomersService {
                 createdAt: 'DESC',
             },
         });
+    }
+    async findOne(id) {
+        const customer = await this.customersRepository.findOneBy({ id });
+        if (!customer) {
+            throw new NotFoundException(`Customer with ID ${id} not found`);
+        }
+        return customer;
+    }
+    async create(input) {
+        const customer = this.customersRepository.create({
+            firstName: input.firstName.trim(),
+            lastName: input.lastName.trim(),
+            email: input.email.trim().toLowerCase(),
+            documentNumber: input.documentNumber.trim(),
+        });
+        try {
+            return await this.customersRepository.save(customer);
+        }
+        catch (error) {
+            if (error instanceof QueryFailedError &&
+                error.driverError?.code === '23505') {
+                throw new ConflictException('A customer with this email or document already exists');
+            }
+            throw error;
+        }
     }
 };
 CustomersService = __decorate([
