@@ -24,6 +24,34 @@ export enum TransactionStatus {
 }
 
 @Entity('transactions')
+@Check(
+  'CHK_transactions_currency_fields',
+  `(
+    (
+      "type" IN ('DEPOSIT', 'WITHDRAWAL')
+      AND "destination_amount" IS NULL
+      AND "destination_currency_code" IS NULL
+      AND "exchange_rate_applied" IS NULL
+    )
+    OR
+    (
+      "type" = 'TRANSFER'
+      AND "destination_amount" IS NOT NULL
+      AND "destination_currency_code" IS NOT NULL
+      AND (
+        (
+          "currency_code" = "destination_currency_code"
+          AND "exchange_rate_applied" IS NULL
+        )
+        OR
+        (
+          "currency_code" <> "destination_currency_code"
+          AND "exchange_rate_applied" IS NOT NULL
+        )
+      )
+    )
+  )`,
+)
 @Check('CHK_transactions_positive_amount', '"amount" > 0')
 @Check(
   'CHK_transactions_destination_amount',

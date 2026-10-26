@@ -7,7 +7,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-import { Entity, PrimaryColumn, Column, } from 'typeorm';
+import { Entity, PrimaryColumn, Column, Check, } from 'typeorm';
 let Currency = class Currency {
     code;
     name;
@@ -42,7 +42,8 @@ __decorate([
     __metadata("design:type", Boolean)
 ], Currency.prototype, "isActive", void 0);
 Currency = __decorate([
-    Entity('currencies')
+    Entity('currencies'),
+    Check('CHK_currencies_decimal_places', '"decimal_places" BETWEEN 0 AND 4')
 ], Currency);
 export { Currency };
 //# sourceMappingURL=currency.entity.js.map
