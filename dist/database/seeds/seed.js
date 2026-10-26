@@ -104,7 +104,7 @@ async function seed() {
             }
             console.log('Exchange rates seeded');
         });
-        console.log('Banking seed completed successfully!');
+        console.log('Data seeding completed');
     }
     finally {
         await AppDataSource.destroy();

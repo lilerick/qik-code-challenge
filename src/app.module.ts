@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { GraphQLModule } from '@nestjs/graphql';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 
 import { AppController } from './app.controller.js';
 import { AppService } from './app.service.js';
@@ -38,6 +40,12 @@ import { TransactionsModule } from './modules/transactions/transactions.module.j
     ExchangeRatesModule,
 
     TransactionsModule,
+
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
+      autoSchemaFile: true,
+      sortSchema: true,
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],
