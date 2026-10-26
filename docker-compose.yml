@@ -1,0 +1,21 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: qik-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: qik
+      POSTGRES_PASSWORD: qik_dev_password
+      POSTGRES_DB: qik_banking
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U qik -d qik_banking"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
