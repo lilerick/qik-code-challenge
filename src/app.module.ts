@@ -4,6 +4,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { AppController } from './app.controller.js';
 import { AppService } from './app.service.js';
+import { CustomersModule } from './modules/customers/customers.module.js';
+import { CurrenciesModule } from './modules/currencies/currencies.module.js';
+import { AccountsModule } from './modules/accounts/accounts.module.js';
+import { ExchangeRatesModule } from './modules/exchange-rates/exchange-rates.module.js';
+import { TransactionsModule } from './modules/transactions/transactions.module.js';
 
 @Module({
   imports: [ConfigModule.forRoot({
@@ -23,6 +28,16 @@ import { AppService } from './app.service.js';
         synchronize: false,
       }),
     }),
+
+    CustomersModule,
+
+    CurrenciesModule,
+
+    AccountsModule,
+
+    ExchangeRatesModule,
+
+    TransactionsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
