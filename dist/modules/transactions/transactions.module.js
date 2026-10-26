@@ -8,12 +8,13 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Transaction } from './entities/transaction.entity.js';
 import { TransactionsService } from './transactions.service.js';
+import { TransactionsResolver } from './transactions.resolver.js';
 let TransactionsModule = class TransactionsModule {
 };
 TransactionsModule = __decorate([
     Module({
         imports: [TypeOrmModule.forFeature([Transaction])],
-        providers: [TransactionsService],
+        providers: [TransactionsService, TransactionsResolver],
         exports: [TransactionsService],
     })
 ], TransactionsModule);
