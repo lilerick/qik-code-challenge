@@ -1,114 +1,302 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# QIK Banking API — Technical Challenge
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Backend de operaciones bancarias construido con **NestJS, TypeScript, GraphQL y PostgreSQL**, con caché Redis, búsqueda Elasticsearch y pruebas de integración.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Funcionalidades
 
-## Description
+- Gestión de clientes y cuentas bancarias mediante GraphQL.
+- Depósitos, retiros y transferencias, incluidas transferencias con conversión de moneda.
+- Validación de entrada con DTOs y `ValidationPipe`.
+- Operaciones monetarias con `decimal.js`, transacciones PostgreSQL y bloqueo de filas para proteger saldos ante concurrencia.
+- Claves de idempotencia para evitar que una solicitud repetida duplique una operación.
+- Caché Redis de monedas con fallback a PostgreSQL cuando Redis no está disponible.
+- Búsqueda de transacciones mediante Elasticsearch, con filtros y paginación.
+- Reindexación bajo demanda y sincronización periódica del índice.
+- Endpoint REST `GET /health` para PostgreSQL y Elasticsearch.
+- Pruebas de integración sobre PostgreSQL aislado con Vitest.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Tecnologías
 
-## Project setup
+- Node.js, NestJS 12, TypeScript (ESM)
+- GraphQL / Apollo Server
+- PostgreSQL 17 / TypeORM (migraciones)
+- Redis 7 / Keyv
+- Elasticsearch 9
+- Docker Compose
+- Vitest, ESLint, Prettier
 
-```bash
-$ npm install
-```
+## Requisitos
 
-## Compile and run the project
+- Node.js y npm compatibles con las dependencias del proyecto (se recomienda una versión LTS reciente).
+- Docker Engine / Docker Desktop con Docker Compose.
+- Puertos disponibles: `3000` (API), `3001` (API de pruebas), `5433` (PostgreSQL), `6379` (Redis), `9200` (Elasticsearch).
 
-```bash
-# development
-$ npm run start
+## Inicio rápido
 
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
-```
-
-## Run tests
+### 1. Instalar dependencias
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+npm ci
 ```
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+### 2. Levantar infraestructura
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+docker compose up -d
+
+docker compose ps
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+El archivo `docker-compose.yml` inicia PostgreSQL, Redis y Elasticsearch. PostgreSQL se expone en `localhost:5433`; Redis y Elasticsearch se publican únicamente en `127.0.0.1`.
 
-## Observability
+### 3. Configurar variables de entorno
 
-In production applications, observability is essential for understanding how your system behaves, detecting issues early, and maintaining reliable performance.
+Copiar `.env.example` a `.env`:
 
-[NestJS Observe](https://observe.nestjs.com) automatically instruments your NestJS application, giving you deep visibility into your system with minimal setup:
+```powershell
+Copy-Item .env.example .env
+```
 
-- **Distributed tracing:** Follow requests across services and understand how they flow through your system.
-- **Waterfall analysis:** Visualize request execution and identify slow operations, bottlenecks, and unexpected delays.
-- **Performance analysis:** Analyze application performance in real time and quickly pinpoint areas that need optimization.
-- **Metrics:** Track key application and infrastructure metrics to understand system health and performance trends.
-- **Logging:** Centralize and correlate logs with traces and other telemetry to make debugging easier.
-- **Error tracking:** Detect errors quickly and investigate their root causes with the surrounding context.
-- **SLA monitoring:** Track service-level objectives and identify when your application is approaching or exceeding defined thresholds.
-- **Alarms and alerts:** Set up alerts for critical errors, performance degradation, SLA violations, and other anomalies so your team can react quickly.
+Ejemplo para el Docker Compose incluido:
 
-## Resources
+```dotenv
+DB_HOST=localhost
+DB_PORT=5433
+DB_USERNAME=qik
+DB_PASSWORD=qik_dev_password
+DB_DATABASE=qik_banking
+REDIS_URL=redis://127.0.0.1:6379
+ELASTICSEARCH_NODE=http://127.0.0.1:9200
+```
 
-Check out a few resources that may come in handy when working with NestJS:
+**Importante:** `.env.example` trae `DB_PASSWORD=your_password` como marcador de posición. Sustituirlo por `qik_dev_password` para coincidir con el Compose proporcionado, o cambiar ambos valores de manera consistente. **Nunca subir `.env` a Git.** Las credenciales de Compose son exclusivamente de desarrollo local.
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Auto-instrument your application with [NestJS Observer](https://observer.nestjs.com). Distributed tracing, metrics, and logging made easy. Error tracking and performance monitoring for your NestJS applications.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+### 4. Crear esquema mediante migraciones
 
-## Support
+La configuración TypeORM desactiva la sincronización automática (`synchronize: false`) y la ejecución automática de migraciones (`migrationsRun: false`). Por lo tanto, las migraciones deben ejecutarse explícitamente.
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```bash
+npm run build
+node ./node_modules/typeorm/cli.js migration:run -d dist/database/data-source.js
+```
 
-## Stay in touch
+> El comando anterior presupone que `src/database/data-source.ts` exporta una instancia de `DataSource` y que su detección `isCompiled` selecciona las migraciones de `dist/database/migrations/*.js` al ejecutar el archivo compilado. Comprueba esos dos detalles antes de la primera instalación limpia.
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+### 5. Insertar datos iniciales
 
-## License
+```bash
+npm run seed
+```
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+La semilla prepara datos de demostración, incluidas monedas, clientes y cuentas, conforme a la implementación del proyecto.
+
+### 6. Iniciar la API
+
+```bash
+npm run start:dev
+```
+
+- GraphQL / interfaz interactiva: <http://localhost:3000/graphql>
+- Health check: <http://localhost:3000/health>
+
+## GraphQL
+
+La API utiliza GraphQL para consultas y mutaciones bancarias. La documentación interactiva del esquema está disponible en `/graphql`.
+
+### Consultar clientes
+
+```graphql
+query {
+  customers {
+    id
+    firstName
+    lastName
+  }
+}
+```
+
+### Consultar cuentas
+
+Sustituye el UUID del cliente:
+
+```graphql
+query {
+  accountsByCustomer(customerId: "UUID-DEL-CLIENTE") {
+    id
+    accountNumber
+    balance
+    currencyCode
+  }
+}
+```
+
+### Realizar un depósito
+
+Utiliza un UUID de idempotencia nuevo para cada operación distinta:
+
+```graphql
+mutation {
+  deposit(input: {
+    accountId: "UUID-DE-LA-CUENTA"
+    amount: "50.00"
+    idempotencyKey: "d8a7f912-6d3c-4b85-93b1-e22c7a490615"
+  }) {
+    id
+    type
+    status
+    amount
+    currencyCode
+  }
+}
+```
+
+### Buscar transacciones
+
+```graphql
+query {
+  searchTransactions(input: { limit: 20, offset: 0 }) {
+    id
+    type
+    status
+    amount
+    currencyCode
+    createdAt
+  }
+}
+```
+
+También se admiten filtros por cuenta, tipo de transacción, moneda y rango de fechas según `SearchTransactionsInput`.
+
+## Persistencia y consistencia
+
+Las operaciones financieras emplean PostgreSQL como fuente de verdad. La lógica de depósitos, retiros y transferencias se implementa en servicios especializados y utiliza transacciones SQL. Los importes se calculan mediante `decimal.js` para evitar errores típicos de coma flotante.
+
+La clave de idempotencia permite identificar solicitudes repetidas y evitar la aplicación duplicada de un movimiento. Las pruebas verifican que dos retiros concurrentes no produzcan sobregiros.
+
+## Redis
+
+Redis se utiliza como caché para consultas de monedas. Ante indisponibilidad de Redis, la aplicación puede recuperar los datos de PostgreSQL. La indisponibilidad de la caché no debe impedir las operaciones bancarias.
+
+## Elasticsearch
+
+Elasticsearch proporciona búsqueda de transacciones sobre el índice `banking-transactions-v1`.
+
+Para reconstruir el índice desde PostgreSQL:
+
+```bash
+npm run reindex:transactions
+```
+
+La aplicación utiliza un sincronizador periódico, con intervalo de **60 segundos**, que vuelve a indexar transacciones guardadas en PostgreSQL. Los documentos tienen como identificador el UUID de la transacción, lo que evita duplicados en reindexaciones repetidas.
+
+**Consistencia eventual:** un movimiento confirmado en PostgreSQL puede tardar hasta el siguiente ciclo de sincronización, más el refresco de Elasticsearch, en aparecer en la búsqueda. Si Elasticsearch falla, las operaciones bancarias continúan y la sincronización se reintentará en un ciclo posterior.
+
+**Limitación conocida:** el sincronizador reindexa el conjunto de movimientos en vez de procesar únicamente los nuevos. Es suficiente para el volumen del challenge, pero no es una estrategia adecuada para volúmenes elevados ni sustituye un *transactional outbox* con workers y reintentos durables. La protección contra ejecuciones solapadas es local a cada instancia de aplicación.
+
+## Health check
+
+```http
+GET http://localhost:3000/health
+```
+
+Respuesta representativa:
+
+```json
+{
+  "status": "ok",
+  "timestamp": "2026-10-27T06:02:28.852Z",
+  "services": {
+    "postgres": "up",
+    "elasticsearch": "up"
+  }
+}
+```
+
+El endpoint comprueba PostgreSQL y Elasticsearch; **no hace todavía un ping independiente a Redis**. El estado general `ok` indica que PostgreSQL está disponible, aunque una dependencia de búsqueda pueda estar degradada.
+
+## Pruebas automatizadas
+
+Las pruebas de integración se encuentran en `src/test/banking.integration.spec.ts`. Verifican:
+
+1. Depósito exitoso.
+2. Idempotencia de depósito.
+3. Rechazo de retiro por fondos insuficientes sin alterar el saldo.
+4. Transferencia entre cuentas de la misma moneda.
+5. Conversión USD → DOP con la tasa configurada en la base de pruebas.
+6. Concurrencia: dos retiros simultáneos no pueden sobregirar una cuenta.
+
+### Base de pruebas aislada
+
+Crear una base de datos separada en el PostgreSQL de Docker:
+
+```powershell
+docker exec qik-postgres createdb -U qik qik_banking_test
+```
+
+En una **terminal PowerShell exclusiva para pruebas**, configurar las variables antes de migraciones y seed:
+
+```powershell
+$env:NODE_ENV = "test"
+$env:DB_DATABASE = "qik_banking_test"
+$env:PORT = "3001"
+
+npm run build
+node ./node_modules/typeorm/cli.js migration:run -d dist/database/data-source.js
+npm run seed
+npm run start:dev
+```
+
+En otra terminal ejecutar:
+
+```powershell
+npx vitest run src/test/banking.integration.spec.ts
+```
+
+**Advertencia de seguridad:** no ejecutar esta suite contra `qik_banking` ni contra una base compartida. El arranque con `NODE_ENV=test` comprueba que PostgreSQL responde con el nombre `qik_banking_test` y exige puerto `3001`; el archivo de pruebas también valida que la URL apunte a localhost:3001. Esa protección de arranque no sustituye la precaución al ejecutar scripts CLI de migración o seed.
+
+La suite requiere una API de pruebas activa y no se ejecuta de manera autónoma. Las seis pruebas de integración han pasado en el entorno local de desarrollo; no se afirma cobertura total del proyecto ni una prueba inyectada de rollback tras escritura parcial.
+
+## Calidad y comandos útiles
+
+```bash
+npm run build
+npm run lint:check
+npm run format:check
+npm run format
+npm run test
+npm run reindex:transactions
+```
+
+El script `npm run test` ejecuta Vitest; las pruebas de integración HTTP exigen que la API de pruebas esté iniciada previamente. Los logs de NestJS se limitan a los niveles configurados en `src/main.ts`.
+
+## Estructura principal
+
+```text
+src/
+├── database/
+│   ├── data-source.ts
+│   ├── migrations/
+│   └── seeds/
+├── infrastructure/
+│   ├── cache/
+│   └── search/
+├── modules/
+│   ├── accounts/
+│   ├── currencies/
+│   ├── customers/
+│   ├── exchange-rates/
+│   ├── health/
+│   └── transactions/
+│       ├── dto/
+│       ├── entities/
+│       ├── models/
+│       └── services/
+├── scripts/
+├── test/
+│   └── banking.integration.spec.ts
+└── main.ts
+```
+
+## Alcance y posibles mejoras
+
+Este repositorio es una prueba técnica, no una plataforma bancaria lista para producción. Algunas mejoras fuera del alcance actual son autenticación/autorización, observabilidad centralizada, un sistema de *outbox* para Elasticsearch, sincronización incremental, pruebas adicionales de rollback y automatización completa del ambiente de pruebas en CI.
