@@ -6,6 +6,13 @@ import { DepositInput } from './dto/deposit.input.js';
 import { WithdrawInput } from './dto/withdraw.input.js';
 import { TransferInput } from './dto/transfer.input.js';
 
+import { registerEnumType } from '@nestjs/graphql';
+import { TransactionType } from './entities/transaction.entity.js';
+
+registerEnumType(TransactionType, {
+  name: 'TransactionType',
+});
+
 @Resolver(() => TransactionModel)
 export class TransactionsResolver {
   constructor(private readonly transactionsService: TransactionsService) {}
