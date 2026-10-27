@@ -18,6 +18,7 @@ import { ExchangeRatesModule } from './modules/exchange-rates/exchange-rates.mod
 import { TransactionsModule } from './modules/transactions/transactions.module.js';
 import { SearchModule } from './infrastructure/search/search.module.js';
 import { ScheduleModule } from '@nestjs/schedule';
+import { HealthModule } from './modules/health/health.module.js';
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
@@ -28,6 +29,7 @@ AppModule = __decorate([
             }),
             SearchModule,
             ScheduleModule.forRoot(),
+            HealthModule,
             TypeOrmModule.forRootAsync({
                 inject: [ConfigService],
                 useFactory: (config) => ({
