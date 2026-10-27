@@ -15,6 +15,7 @@ import { TransactionsService } from './transactions.service.js';
 import { TransactionModel } from './models/transaction.model.js';
 import { DepositInput } from './dto/deposit.input.js';
 import { WithdrawInput } from './dto/withdraw.input.js';
+import { TransferInput } from './dto/transfer.input.js';
 let TransactionsResolver = class TransactionsResolver {
     transactionsService;
     constructor(transactionsService) {
@@ -25,6 +26,9 @@ let TransactionsResolver = class TransactionsResolver {
     }
     async withdraw(input) {
         return this.transactionsService.withdraw(input);
+    }
+    async transfer(input) {
+        return this.transactionsService.transfer(input);
     }
 };
 __decorate([
@@ -41,6 +45,13 @@ __decorate([
     __metadata("design:paramtypes", [WithdrawInput]),
     __metadata("design:returntype", Promise)
 ], TransactionsResolver.prototype, "withdraw", null);
+__decorate([
+    Mutation(() => TransactionModel),
+    __param(0, Args('input')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [TransferInput]),
+    __metadata("design:returntype", Promise)
+], TransactionsResolver.prototype, "transfer", null);
 TransactionsResolver = __decorate([
     Resolver(() => TransactionModel),
     __metadata("design:paramtypes", [TransactionsService])

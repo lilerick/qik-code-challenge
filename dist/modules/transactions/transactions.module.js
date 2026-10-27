@@ -7,14 +7,22 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Transaction } from './entities/transaction.entity.js';
-import { TransactionsService } from './transactions.service.js';
 import { TransactionsResolver } from './transactions.resolver.js';
+import { TransactionsService } from './transactions.service.js';
+import { DepositService } from './services/deposit.service.js';
+import { WithdrawalService } from './services/withdrawal.service.js';
+import { TransferService } from './services/transfer.service.js';
 let TransactionsModule = class TransactionsModule {
 };
 TransactionsModule = __decorate([
     Module({
         imports: [TypeOrmModule.forFeature([Transaction])],
-        providers: [TransactionsService, TransactionsResolver],
+        providers: [TransactionsService,
+            TransactionsResolver,
+            DepositService,
+            WithdrawalService,
+            TransferService
+        ],
         exports: [TransactionsService],
     })
 ], TransactionsModule);
