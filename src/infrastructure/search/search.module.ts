@@ -6,6 +6,7 @@ import { Transaction } from '../../modules/transactions/entities/transaction.ent
 
 import { SearchService } from './search.service.js';
 import { TransactionsReindexService } from './transactions-reindex.service.js';
+import { TransactionsSearchSyncService } from './transactions-search-sync.service.js';
 
 @Module({
   imports: [
@@ -26,7 +27,11 @@ import { TransactionsReindexService } from './transactions-reindex.service.js';
       },
     }),
   ],
-  providers: [SearchService, TransactionsReindexService],
+  providers: [
+    SearchService,
+    TransactionsReindexService,
+    TransactionsSearchSyncService,
+  ],
   exports: [SearchService, TransactionsReindexService],
 })
 export class SearchModule {}

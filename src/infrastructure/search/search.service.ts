@@ -1,6 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 
+import type { SearchTransactionsInput } from '../../modules/transactions/dto/search-transactions.input.js';
+import type { TransactionModel } from '../../modules/transactions/models/transaction.model.js';
+import type { estypes } from '@elastic/elasticsearch';
+
 import type { Transaction } from '../../modules/transactions/entities/transaction.entity.js';
 
 @Injectable()
@@ -77,5 +81,72 @@ export class SearchService {
         createdAt: transaction.createdAt,
       },
     });
+  }
+
+  async searchTransactions(
+    input: SearchTransactionsInput,
+  ): Promise<TransactionModel[]> {
+    const filters: estypes.QueryDslQueryContainer[] = [];
+
+    if (input.accountId) {
+      filters.push({
+        bool: {
+          should: [
+            { term: { sourceAccountId: input.accountId } },
+            { term: { destinationAccountId: input.accountId } },
+          ],
+          minimum_should_match: 1,
+        },
+      });
+    }
+
+    if (input.type) {
+      filters.push({ term: { type: input.type } });
+    }
+
+    if (input.currencyCode) {
+      filters.push({
+        term: { currencyCode: input.currencyCode.toUpperCase() },
+      });
+    }
+
+    if (input.fromDate || input.toDate) {
+      filters.push({
+        range: {
+          createdAt: {
+            ...(input.fromDate ? { gte: input.fromDate } : {}),
+            ...(input.toDate ? { lte: input.toDate } : {}),
+          },
+        },
+      });
+    }
+
+    const response = await this.elasticsearch.search({
+      index: this.indexName,
+      from: input.offset,
+      size: input.limit,
+      query: filters.length ? { bool: { filter: filters } } : { match_all: {} },
+      sort: [{ createdAt: { order: 'desc' } }, { id: { order: 'desc' } }],
+    });
+
+    return response.hits.hits
+      .filter((hit) => hit._source != null)
+      .map((hit) => {
+        const source = hit._source as Record<string, unknown>;
+
+        return {
+          id: String(source.id),
+          type: source.type,
+          status: source.status,
+          sourceAccountId: source.sourceAccountId ?? null,
+          destinationAccountId: source.destinationAccountId ?? null,
+          amount: String(source.amount),
+          currencyCode: String(source.currencyCode),
+          destinationAmount: source.destinationAmount ?? null,
+          destinationCurrencyCode: source.destinationCurrencyCode ?? null,
+          exchangeRateApplied: source.exchangeRateApplied ?? null,
+          createdAt: new Date(String(source.createdAt)),
+        } as TransactionModel;
+      });
   }
 }

@@ -12,14 +12,17 @@ import { TransactionsService } from './transactions.service.js';
 import { DepositService } from './services/deposit.service.js';
 import { WithdrawalService } from './services/withdrawal.service.js';
 import { TransferService } from './services/transfer.service.js';
+import { SearchModule } from '../../infrastructure/search/search.module.js';
+import { TransactionsSearchResolver } from './transactions-search.resolver.js';
 let TransactionsModule = class TransactionsModule {
 };
 TransactionsModule = __decorate([
     Module({
-        imports: [TypeOrmModule.forFeature([Transaction])],
+        imports: [TypeOrmModule.forFeature([Transaction]), SearchModule],
         providers: [
             TransactionsService,
             TransactionsResolver,
+            TransactionsSearchResolver,
             DepositService,
             WithdrawalService,
             TransferService,

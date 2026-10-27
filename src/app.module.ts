@@ -12,6 +12,7 @@ import { AccountsModule } from './modules/accounts/accounts.module.js';
 import { ExchangeRatesModule } from './modules/exchange-rates/exchange-rates.module.js';
 import { TransactionsModule } from './modules/transactions/transactions.module.js';
 import { SearchModule } from './infrastructure/search/search.module.js';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -20,6 +21,8 @@ import { SearchModule } from './infrastructure/search/search.module.js';
     }),
 
     SearchModule,
+
+    ScheduleModule.forRoot(),
 
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
