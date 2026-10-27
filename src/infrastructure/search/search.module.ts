@@ -1,10 +1,15 @@
 import { Module } from '@nestjs/common';
 import { ElasticsearchModule } from '@nestjs/elasticsearch';
+import { TypeOrmModule } from '@nestjs/typeorm';
+
+import { Transaction } from '../../modules/transactions/entities/transaction.entity.js';
 
 import { SearchService } from './search.service.js';
+import { TransactionsReindexService } from './transactions-reindex.service.js';
 
 @Module({
   imports: [
+    TypeOrmModule.forFeature([Transaction]),
     ElasticsearchModule.registerAsync({
       useFactory: () => {
         const node = process.env.ELASTICSEARCH_NODE;
@@ -21,7 +26,7 @@ import { SearchService } from './search.service.js';
       },
     }),
   ],
-  providers: [SearchService],
-  exports: [SearchService],
+  providers: [SearchService, TransactionsReindexService],
+  exports: [SearchService, TransactionsReindexService],
 })
 export class SearchModule {}
