@@ -7,13 +7,16 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Account } from './entities/account.entity.js';
+import { Customer } from '../customers/entities/customer.entity.js';
+import { Currency } from '../currencies/entities/currency.entity.js';
 import { AccountsService } from './accounts.service.js';
+import { AccountsResolver } from './accounts.resolver.js';
 let AccountsModule = class AccountsModule {
 };
 AccountsModule = __decorate([
     Module({
-        imports: [TypeOrmModule.forFeature([Account])],
-        providers: [AccountsService],
+        imports: [TypeOrmModule.forFeature([Account, Customer, Currency])],
+        providers: [AccountsService, AccountsResolver],
         exports: [AccountsService],
     })
 ], AccountsModule);

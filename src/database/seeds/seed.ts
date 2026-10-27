@@ -40,7 +40,6 @@ const accounts = [
   { number: 'QIK-000005', document: '003555555', currency: 'USD' },
 ];
 
-
 const exchangeRates = [
   { from: 'USD', to: 'DOP', rate: '60.000000000000' },
   { from: 'DOP', to: 'USD', rate: '0.016666666667' },
@@ -86,7 +85,7 @@ async function seed(): Promise<void> {
 
       console.log('Customers seeded');
 
-      // Accounts 
+      // Accounts
       for (const account of accounts) {
         const existing = await accountRepo.findOneBy({
           accountNumber: account.number,

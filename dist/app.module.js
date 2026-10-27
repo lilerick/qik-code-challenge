@@ -7,6 +7,8 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { GraphQLModule } from '@nestjs/graphql';
+import { ApolloDriver } from '@nestjs/apollo';
 import { AppController } from './app.controller.js';
 import { AppService } from './app.service.js';
 import { CustomersModule } from './modules/customers/customers.module.js';
@@ -18,7 +20,8 @@ let AppModule = class AppModule {
 };
 AppModule = __decorate([
     Module({
-        imports: [ConfigModule.forRoot({
+        imports: [
+            ConfigModule.forRoot({
                 isGlobal: true,
             }),
             TypeOrmModule.forRootAsync({
@@ -38,7 +41,13 @@ AppModule = __decorate([
             CurrenciesModule,
             AccountsModule,
             ExchangeRatesModule,
-            TransactionsModule,],
+            TransactionsModule,
+            GraphQLModule.forRoot({
+                driver: ApolloDriver,
+                autoSchemaFile: true,
+                sortSchema: true,
+            }),
+        ],
         controllers: [AppController],
         providers: [AppService],
     })

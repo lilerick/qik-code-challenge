@@ -14,18 +14,11 @@ export default new DataSource({
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_DATABASE,
-    entities: [
-        Customer,
-        Currency,
-        Account,
-        ExchangeRate,
-        Transaction,
-    ],
+    entities: [Customer, Currency, Account, ExchangeRate, Transaction],
     migrations: [
         isCompiled
             ? 'dist/database/migrations/*.js'
-            :
-                'src/database/migrations/*.ts',
+            : 'src/database/migrations/*.ts',
     ],
     synchronize: false,
     migrationsRun: false,
