@@ -20,7 +20,8 @@ let AppModule = class AppModule {
 };
 AppModule = __decorate([
     Module({
-        imports: [ConfigModule.forRoot({
+        imports: [
+            ConfigModule.forRoot({
                 isGlobal: true,
             }),
             TypeOrmModule.forRootAsync({

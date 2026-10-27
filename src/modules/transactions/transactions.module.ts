@@ -12,11 +12,12 @@ import { TransferService } from './services/transfer.service.js';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Transaction])],
-  providers: [TransactionsService, 
+  providers: [
+    TransactionsService,
     TransactionsResolver,
     DepositService,
     WithdrawalService,
-    TransferService
+    TransferService,
   ],
   exports: [TransactionsService],
 })

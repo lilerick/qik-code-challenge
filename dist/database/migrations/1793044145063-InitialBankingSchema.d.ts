@@ -1,4 +1,4 @@
-import type { MigrationInterface, QueryRunner } from "typeorm";
+import type { MigrationInterface, QueryRunner } from 'typeorm';
 export declare class InitialBankingSchema1793044145063 implements MigrationInterface {
     name: string;
     up(queryRunner: QueryRunner): Promise<void>;

@@ -1,8 +1,5 @@
 import { Field, ID, InputType } from '@nestjs/graphql';
-import {
-  IsIn,
-  IsUUID,
-} from 'class-validator';
+import { IsIn, IsUUID } from 'class-validator';
 
 @InputType()
 export class CreateAccountInput {

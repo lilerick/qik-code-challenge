@@ -13,7 +13,8 @@ import { ExchangeRatesModule } from './modules/exchange-rates/exchange-rates.mod
 import { TransactionsModule } from './modules/transactions/transactions.module.js';
 
 @Module({
-  imports: [ConfigModule.forRoot({
+  imports: [
+    ConfigModule.forRoot({
       isGlobal: true,
     }),
 

@@ -10,7 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-import { Args, Mutation, Resolver, } from '@nestjs/graphql';
+import { Args, Mutation, Resolver } from '@nestjs/graphql';
 import { TransactionsService } from './transactions.service.js';
 import { TransactionModel } from './models/transaction.model.js';
 import { DepositInput } from './dto/deposit.input.js';

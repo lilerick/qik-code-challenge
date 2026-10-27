@@ -1,9 +1,5 @@
 import { Field, ID, InputType } from '@nestjs/graphql';
-import {
-  IsUUID,
-  IsString,
-  Matches,
-} from 'class-validator';
+import { IsUUID, IsString, Matches } from 'class-validator';
 
 @InputType()
 export class DepositInput {

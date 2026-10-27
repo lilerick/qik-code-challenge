@@ -1,15 +1,7 @@
-import {
-  Entity,
-  PrimaryColumn,
-  Column,
-  Check,
-} from 'typeorm';
+import { Entity, PrimaryColumn, Column, Check } from 'typeorm';
 
 @Entity('currencies')
-@Check(
-  'CHK_currencies_decimal_places',
-  '"decimal_places" BETWEEN 0 AND 4',
-)
+@Check('CHK_currencies_decimal_places', '"decimal_places" BETWEEN 0 AND 4')
 export class Currency {
   @PrimaryColumn({
     type: 'varchar',

@@ -23,9 +23,7 @@ import type { WithdrawInput } from '../dto/withdraw.input.js';
 
 @Injectable()
 export class WithdrawalService {
-  constructor(
-    private readonly dataSource: DataSource,
-  ) {}
+  constructor(private readonly dataSource: DataSource) {}
 
   async execute(input: WithdrawInput): Promise<Transaction> {
     const amount = new Decimal(input.amount);
@@ -125,8 +123,7 @@ export class WithdrawalService {
       // Handle concurrent requests using the same idempotency key
       if (
         driverError.driverError?.code === '23505' &&
-        driverError.driverError.constraint ===
-          'UQ_transactions_idempotency_key'
+        driverError.driverError.constraint === 'UQ_transactions_idempotency_key'
       ) {
         const existing = await this.dataSource
           .getRepository(Transaction)

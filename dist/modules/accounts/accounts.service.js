@@ -15,7 +15,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { randomUUID } from 'node:crypto';
 import { Repository } from 'typeorm';
 import { Account } from './entities/account.entity.js';
-import { Customer, CustomerStatus } from '../customers/entities/customer.entity.js';
+import { Customer, CustomerStatus, } from '../customers/entities/customer.entity.js';
 import { Currency } from '../currencies/entities/currency.entity.js';
 let AccountsService = class AccountsService {
     accountsRepository;

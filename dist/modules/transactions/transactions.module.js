@@ -17,11 +17,12 @@ let TransactionsModule = class TransactionsModule {
 TransactionsModule = __decorate([
     Module({
         imports: [TypeOrmModule.forFeature([Transaction])],
-        providers: [TransactionsService,
+        providers: [
+            TransactionsService,
             TransactionsResolver,
             DepositService,
             WithdrawalService,
-            TransferService
+            TransferService,
         ],
         exports: [TransactionsService],
     })

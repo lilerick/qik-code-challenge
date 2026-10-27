@@ -77,8 +77,7 @@ let DepositService = class DepositService {
         catch (error) {
             const driverError = error;
             if (driverError.driverError?.code === '23505' &&
-                driverError.driverError.constraint ===
-                    'UQ_transactions_idempotency_key') {
+                driverError.driverError.constraint === 'UQ_transactions_idempotency_key') {
                 const existing = await this.dataSource
                     .getRepository(Transaction)
                     .findOneBy({

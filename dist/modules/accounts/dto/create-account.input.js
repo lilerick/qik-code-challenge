@@ -8,7 +8,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 import { Field, ID, InputType } from '@nestjs/graphql';
-import { IsIn, IsUUID, } from 'class-validator';
+import { IsIn, IsUUID } from 'class-validator';
 let CreateAccountInput = class CreateAccountInput {
     customerId;
     currencyCode;

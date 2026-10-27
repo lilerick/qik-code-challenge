@@ -23,9 +23,7 @@ import type { DepositInput } from '../dto/deposit.input.js';
 
 @Injectable()
 export class DepositService {
-  constructor(
-    private readonly dataSource: DataSource,
-  ) {}
+  constructor(private readonly dataSource: DataSource) {}
 
   async execute(input: DepositInput): Promise<Transaction> {
     const amount = new Decimal(input.amount);
@@ -85,9 +83,7 @@ export class DepositService {
         const newBalance = new Decimal(account.balance).plus(amount);
 
         if (newBalance.gte('1000000000000000')) {
-          throw new BadRequestException(
-            'Balance exceeds the supported limit',
-          );
+          throw new BadRequestException('Balance exceeds the supported limit');
         }
 
         // 5. Update balance within the SQL transaction
@@ -125,8 +121,7 @@ export class DepositService {
       // Handle concurrent requests with the same idempotency key
       if (
         driverError.driverError?.code === '23505' &&
-        driverError.driverError.constraint ===
-          'UQ_transactions_idempotency_key'
+        driverError.driverError.constraint === 'UQ_transactions_idempotency_key'
       ) {
         const existing = await this.dataSource
           .getRepository(Transaction)

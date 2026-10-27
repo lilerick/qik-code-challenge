@@ -15,7 +15,7 @@ let AccountsModule = class AccountsModule {
 };
 AccountsModule = __decorate([
     Module({
-        imports: [TypeOrmModule.forFeature([Account, Customer, Currency,])],
+        imports: [TypeOrmModule.forFeature([Account, Customer, Currency])],
         providers: [AccountsService, AccountsResolver],
         exports: [AccountsService],
     })
